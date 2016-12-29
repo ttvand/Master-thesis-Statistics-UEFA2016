@@ -1,0 +1,209 @@
+---
+title: "homeEffect"
+author: "Tom Van de Wiele"
+date: "1 november 2015"
+output: word_document
+---
+
+This is an R Markdown document. 
+
+```{r}
+# Clear workspace
+rm(list=ls())
+
+# Set working directory
+setwd("C:/Users/Tom/Documents/Sta dat Tom/Thesis/R/")
+
+# Load english soccer data
+# library(devtools)
+# install_github('jalapic/engsoccerdata', username = "jalapic")
+library(engsoccerdata)
+
+# General parameters
+targetSeasons <- 1946:2014 # three point years
+nbSeasons <- length(targetSeasons)
+summary <- data.frame(team=character(0),home=numeric(0),away=numeric(0),
+                      ranking=integer(0),season=integer(0))
+summaryFile <- "summary.RData"
+loadSummary <- TRUE
+
+if(loadSummary){
+  load(summaryFile)
+} else{
+  for(i in 1:nbSeasons){
+    # Subset scores dataset
+    targetSeason <- targetSeasons[i]
+    data <- engsoccerdata2[engsoccerdata2$Season == targetSeason &
+                             engsoccerdata2$division == "1",]
+    
+    if(nrow(data)>100){
+      
+      # Preprocess data
+      teams <- unique(sort(c(data$home,data$visitor)))
+      nb.teams <- length(teams)
+      data$homeId <- match(data$home,teams)
+      data$visitId <- match(data$visitor,teams)
+      data$days.passed <- as.numeric(difftime(max(data$Date),
+                                              data$Date,units="days"))
+      season.table <- maketable(data, points=3)
+      # season.second.half <- maketable(data[-(1:280),], points=3)
+      
+      # ML function
+      L <- function(parameters, data, halfPeriod = Inf){
+        # All parameters should be strictly positive - enforced by exp
+        # transformation
+        parameters <- exp(parameters)
+        
+        # Split up parameters
+        n <- length(parameters)
+        nb.teams <- (n-1)/2
+        
+        strengthsHome <- parameters[1:nb.teams]
+        strengthsAway <- parameters[nb.teams+(1:nb.teams)]
+        K <- parameters[n]
+        
+        # Calculate the relative outcome probabilities
+        num1 <- strengthsHome[data$homeId]
+        num3 <- strengthsAway[data$visitId]
+        num2 <- K*sqrt(num1*num3)
+        denom <- num1 + num2 + num3
+        
+        # Calculate the ML ratios
+        ratio1 <- num1/denom
+        ratio2 <- num2/denom
+        ratio3 <- num3/denom
+        
+        # Calculate the time effect
+        timeEffect <- exp(-data$days.passed*log(2)/halfPeriod)
+        
+        # Calculate negative log likelihood (so that a minimum corresponds with
+        # the maximum likelihood)
+        out <- -log(prod(ratio1^((data$result == "H") * timeEffect) *
+                           ratio2^((data$result == "D") * timeEffect) *
+                           ratio3^((data$result == "A") * timeEffect)))
+      }
+      
+      # 1) Calculate the ML estimates
+      init <- rep(0,nb.teams*2+1)
+      opt.optim.ML <- optim(init,L,gr = NULL,data=data,halfPeriod=Inf,
+                            method="BFGS")
+      
+      ##########################################
+      # Compare ML estimates to actual ranking #
+      ##########################################
+      ranking.ML <- match(1:(2*nb.teams),
+                          order(opt.optim.ML$par[-(2*nb.teams+1)],
+                                decreasing=TRUE))
+      ranking.actual <- match(teams,season.table$team)
+      
+      # Ordered team strengths
+      plot(ranking.ML[1:nb.teams],ranking.actual,pch=16,col="blue",
+           xlab = "ML ranking", ylab = "Actual ranking",xlim=range(ranking.ML))
+      points(ranking.ML[nb.teams+(1:nb.teams)],ranking.actual,pch=16,
+             col="green")
+      abline(h=seq(5,20,5),lty=2)
+      abline(v=seq(5,40,5),lty=2)
+      legend("topleft",c("Home","Away"),pch=16,col=c("blue","green"))
+      
+      # Log of team strengths
+      home <- opt.optim.ML$par[1:nb.teams]
+      away <- opt.optim.ML$par[nb.teams+(1:nb.teams)]
+      summary <- rbind(summary,data.frame(team=teams,home=home,away=away,
+                                          ranking=ranking.actual,
+                                          season=targetSeason))
+      plot(home,ranking.actual,pch=16,col="blue",
+           xlab= "Log of team strength", ylab="Actual ranking",
+           xlim=range(opt.optim.ML$par[-(2*nb.teams+1)]),
+           main=paste("PL team strengths season",targetSeasons[i]))
+      points(away,ranking.actual,pch=16,col="green")
+      abline(h=seq(5,20,5),lty=2)
+      legend("topright",c("Home","Away"),pch=16,col=c("blue","green"))
+      
+      # Investigate matches of one specific team
+      subsetTeam <- "Queens Park Rangers"
+      team <- data[data$home==subsetTeam | data$visitor==subsetTeam,]
+      
+    }
+    
+    # Save summary on last run of loop
+    if(i == nbSeasons){
+      # Add table sizes to the summary file
+      tableSizes <- aggregate(summary$ranking,list(summary$season),max)
+      names(tableSizes) <- c("season","tableSize")
+      summary <- merge(summary,tableSizes,by="season")
+      
+      save(summary,file = summaryFile)
+    }
+  }
+}
+
+# Subset on the years of interest
+summary <- summary[summary$season %in% targetSeasons,]
+
+# Note: 1891 - Sunderland wins all home matches
+
+# Histogram of home and away strengths
+plot.range <- range(c(summary$home,summary$away))
+hist(summary$home,xlim=plot.range,50)
+hist(summary$away,xlim=plot.range,50)
+
+# Get a grasp of the correlation between home and visiting strength
+ids <- which(summary$team=="Arsenal")
+champs <- which(summary$ranking==1)
+lasts <- which(summary$ranking==summary$tableSize)
+
+plot(summary$home,summary$away,xlim=plot.range,ylim=plot.range,
+     main=paste("PL data between",targetSeasons[1],"and",
+                targetSeasons[nbSeasons]))
+points(summary$home[lasts],summary$away[lasts],pch=16,col="red")
+points(summary$home[champs],summary$away[champs],pch=16,col="green")
+abline(a=0,b=1,col="blue",lwd=3)
+
+# Arithmetic average of team strength ratings and transform back to log of
+# team strengths
+summary$AM <- log((exp(summary$home)+exp(summary$away))/2)
+summary$GM <- (summary$home+summary$away)/2
+summary$HM <- log(2*exp(summary$home+summary$away)/
+                    (exp(summary$home)+exp(summary$away)))
+orders <- aggregate(summary[,c("AM","GM","HM")],list(summary$season),
+                    function(x){
+                      match(1:length(x),order(x,decreasing=TRUE))
+                    })
+actual.rankings <- aggregate(summary[,"ranking"],list(summary$season),
+                             function(x) x)
+merged.rankings <- merge(actual.rankings,orders)
+names(merged.rankings)[1:2] <- c("Season","Actual")
+strengthComb <- t(apply(merged.rankings,1,function(x){
+  sapply(3:5, function(y) {sum(abs(unlist(x[2])-unlist(x[y])))})}))
+colnames(strengthComb) <- c("AM","GM","HM")
+
+# Conclusion: use GM to combine team strengths
+cat(paste0(colnames(strengthComb),":",colSums(strengthComb),collapse="; "))
+
+# Misclassification function to determine the ptimal mu and sigma
+# transformations to model ranking
+MC <- function(parameters, summary, actual.rankings){
+muH <- parameters[1]
+muA <- parameters[2]
+sigmaH <- exp(parameters[3])
+sigmaA <- exp(parameters[4])
+powerRatings <- exp(parameters[5])
+ratings <- pnorm(summary$home*powerRatings,muH,sigmaH) +
+  pnorm(summary$away*powerRatings,muA,sigmaA)
+rankings <- aggregate(ratings,list(summary$season),
+                      function(x){
+                        match(1:length(x),order(x,decreasing=TRUE))
+                      })
+
+# Calculate the number of misclassifications
+misclassifications <- sum(
+  apply(cbind(actual.rankings,rankings),1,
+        function(x){sum(abs(unlist(x[2])-unlist(x[4])))})
+  )
+}
+
+# 1) Calculate the optimal parameters
+init <- c(rep(0,5))
+opt.optim.MC <- optim(init,MC,gr=NULL,summary=summary,
+                      actual.rankings=actual.rankings,method="BFGS")
+```

@@ -1,0 +1,16 @@
+Date,Team1,Team2,Match
+Saturday 25 June 2016,Runner-up Group A,Runner-up C,Match 1
+Saturday 25 June 2016,Winner B,Third-place A/C/D,Match 2
+Saturday 25 June 2016,Winner D,Third-place B/E/F,Match 3
+Sunday 26 June 2016,Winner A,Third-place C/D/E,Match 4
+Sunday 26 June 2016,Winner C,Third-place A/B/F,Match 5
+Sunday 26 June 2016,Winner F,Runner-up E,Match 6
+Monday 27 June 2016,Winner E,Runner-up D,Match 7
+Monday 27 June 2016,Runner-up B,Runner-up F,Match 8
+Thursday 30 June 2016,Match 1,Match 3,QF1
+Friday 1 July 2016,Match 2,Match 6,QF2
+Saturday 2 July 2016,Match 5,Match 7,QF3
+Sunday 3 July 2016,Match 4,Match 8,QF4
+Wednesday 6 July 2016,QF1,QF2,SF1
+Thursday 7 July 2016,QF3,QF4,SF2
+Sunday 10 July 2016,SF1,SF2,F

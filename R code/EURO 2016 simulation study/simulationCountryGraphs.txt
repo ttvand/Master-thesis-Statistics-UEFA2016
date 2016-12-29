@@ -1,0 +1,360 @@
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Albania.png}
+\end{center}
+\caption*{Simulated outcomes for Albania using the actual draw. Albania came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{AlbaniaPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Albania using the permuted draw. Albania came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Austria.png}
+\end{center}
+\caption*{Simulated outcomes for Austria using the actual draw. Austria came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{AustriaPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Austria using the permuted draw. Austria came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Belgium.png}
+\end{center}
+\caption*{Simulated outcomes for Belgium using the actual draw. Belgium came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{BelgiumPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Belgium using the permuted draw. Belgium came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Croatia.png}
+\end{center}
+\caption*{Simulated outcomes for Croatia using the actual draw. Croatia came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{CroatiaPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Croatia using the permuted draw. Croatia came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{CzechRepublic.png}
+\end{center}
+\caption*{Simulated outcomes for Czech Republic using the actual draw. Czech Republic came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{CzechRepublicPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Czech Republic using the permuted draw. Czech Republic came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{England.png}
+\end{center}
+\caption*{Simulated outcomes for England using the actual draw. England came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{EnglandPerm.png}
+\end{center}
+\caption*{Simulated outcomes for England using the permuted draw. England came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{France.png}
+\end{center}
+\caption*{Simulated outcomes for France using the actual draw. France came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{FrancePerm.png}
+\end{center}
+\caption*{Simulated outcomes for France using the permuted draw. France came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Germany.png}
+\end{center}
+\caption*{Simulated outcomes for Germany using the actual draw. Germany came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{GermanyPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Germany using the permuted draw. Germany came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Hungary.png}
+\end{center}
+\caption*{Simulated outcomes for Hungary using the actual draw. Hungary came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{HungaryPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Hungary using the permuted draw. Hungary came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Iceland.png}
+\end{center}
+\caption*{Simulated outcomes for Iceland using the actual draw. Iceland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{IcelandPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Iceland using the permuted draw. Iceland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Italy.png}
+\end{center}
+\caption*{Simulated outcomes for Italy using the actual draw. Italy came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{ItalyPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Italy using the permuted draw. Italy came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{NorthernIreland.png}
+\end{center}
+\caption*{Simulated outcomes for Northern Ireland using the actual draw. Northern Ireland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{NorthernIrelandPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Northern Ireland using the permuted draw. Northern Ireland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Poland.png}
+\end{center}
+\caption*{Simulated outcomes for Poland using the actual draw. Poland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{PolandPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Poland using the permuted draw. Poland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Portugal.png}
+\end{center}
+\caption*{Simulated outcomes for Portugal using the actual draw. Portugal came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{PortugalPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Portugal using the permuted draw. Portugal came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{RepublicofIreland.png}
+\end{center}
+\caption*{Simulated outcomes for Republic of Ireland using the actual draw. Republic of Ireland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{RepublicofIrelandPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Republic of Ireland using the permuted draw. Republic of Ireland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Romania.png}
+\end{center}
+\caption*{Simulated outcomes for Romania using the actual draw. Romania came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{RomaniaPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Romania using the permuted draw. Romania came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Russia.png}
+\end{center}
+\caption*{Simulated outcomes for Russia using the actual draw. Russia came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{RussiaPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Russia using the permuted draw. Russia came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Slovakia.png}
+\end{center}
+\caption*{Simulated outcomes for Slovakia using the actual draw. Slovakia came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{SlovakiaPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Slovakia using the permuted draw. Slovakia came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Spain.png}
+\end{center}
+\caption*{Simulated outcomes for Spain using the actual draw. Spain came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{SpainPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Spain using the permuted draw. Spain came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Sweden.png}
+\end{center}
+\caption*{Simulated outcomes for Sweden using the actual draw. Sweden came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{SwedenPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Sweden using the permuted draw. Sweden came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Switzerland.png}
+\end{center}
+\caption*{Simulated outcomes for Switzerland using the actual draw. Switzerland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{SwitzerlandPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Switzerland using the permuted draw. Switzerland came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Turkey.png}
+\end{center}
+\caption*{Simulated outcomes for Turkey using the actual draw. Turkey came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{TurkeyPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Turkey using the permuted draw. Turkey came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Ukraine.png}
+\end{center}
+\caption*{Simulated outcomes for Ukraine using the actual draw. Ukraine came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{UkrainePerm.png}
+\end{center}
+\caption*{Simulated outcomes for Ukraine using the permuted draw. Ukraine came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{Wales.png}
+\end{center}
+\caption*{Simulated outcomes for Wales using the actual draw. Wales came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=1.0\linewidth]{WalesPerm.png}
+\end{center}
+\caption*{Simulated outcomes for Wales using the permuted draw. Wales came out as the winner of the tournament in X of the 100,000 simulations.}
+\end{figure}
+
+

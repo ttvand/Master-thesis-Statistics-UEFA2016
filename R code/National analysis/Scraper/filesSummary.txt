@@ -1,0 +1,11 @@
+1) scraper: Scrape all european match results from http://eu-football.info
+2) preprocessInternationalResults: Preprocess the international results file
+	- Set date format
+	- Remove matches before fixed date
+	- Exclude matches that include historical or non european teams
+	- Exclude matches before cutoff dates
+	- Remove duplicates
+	- Calculate additional features such as match type and isNeutral
+3) extractGoalsMatches: Add the goal scorers and match links
+
+goalPatterns: Use 3) to analyze goal scoring patterns 

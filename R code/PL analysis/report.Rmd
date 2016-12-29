@@ -1,0 +1,337 @@
+---
+title: "ML team rankings versus combined home and away team rankings"
+author: "Tom Van de Wiele"
+output: pdf_document
+---
+
+Comparison of the team rankings versus the combined home and away team rankings.  
+  
+Main conclusions:  
+
+* Team ranking results in perfect ranking compared to the two point ranking in the absence of ties
+* Combined home away ranking results in perfect ranking compared to the two point ranking in the absence of ties
+* There is marginal homogeneity when comparing the correctness (compared to the two point actual ranking) of both the team ranking results and the combined home away ranking results
+
+```{r}
+# Clear workspace
+rm(list=ls())
+
+# Set working directory
+setwd("C:/Users/Tom/Documents/Sta dat Tom/Thesis/R/")
+
+# Load english soccer data
+# library(devtools)
+# install_github('jalapic/engsoccerdata', username = "jalapic")
+library(engsoccerdata)
+
+# General parameters
+targetSeasons <- 1892:2014
+nbSeasons <- length(targetSeasons)
+summary <- data.frame(team=character(0),teamStrength=numeric(0),
+                      MLRanking=numeric(0),home=numeric(0),away=numeric(0),
+                      tieEffect=numeric(0),ranking2=integer(0),
+                      ranking3=integer(0),tie2=logical(0),season=integer(0))
+summaryFile <- "summaryHomeAwayTeam.RData"
+loadSummary <- TRUE
+
+if(loadSummary && file.exists(summaryFile)){
+  load(summaryFile)
+} else{
+  for(i in 1:nbSeasons){
+    # Subset scores dataset
+    targetSeason <- targetSeasons[i]
+    data <- engsoccerdata2[engsoccerdata2$Season == targetSeason &
+                             engsoccerdata2$division == "1",]
+    
+    if(nrow(data)>100){
+      
+      # Preprocess data
+      teams <- unique(sort(c(data$home,data$visitor)))
+      nb.teams <- length(teams)
+      data$homeId <- match(data$home,teams)
+      data$visitId <- match(data$visitor,teams)
+      data$days.passed <- as.numeric(difftime(max(data$Date),
+                                              data$Date,units="days"))
+      season.table2 <- maketable(data, points=2)
+      season.table3 <- maketable(data, points=3)
+      
+      #####################################
+      # Single team strength calculations #
+      #####################################
+      # (W)ML function
+      L <- function(parameters, data, halfPeriod = Inf){
+        # All parameters should be strictly positive - enforced by exp
+        # transformation
+        parameters <- exp(parameters)
+        
+        # Split up parameters
+        n <- length(parameters)
+        strengths <- parameters[1:(n-2)]
+        K <- parameters[n-1]
+        H <- parameters[n]
+        
+        # Calculate the relative outcome probabilities
+        num1 <- H*strengths[data$homeId]
+        num2 <- K*sqrt(H*strengths[data$homeId]*strengths[data$visitId])
+        num3 <- strengths[data$visitId]
+        denom <- num1 + num2 + num3
+        
+        # Calculate the time effect
+        timeEffect <- exp(-data$days.passed*log(2)/halfPeriod)
+        # cat("\n\n",timeEffect)
+        
+        # Calculate the ML ratios
+        ratio1 <- num1/denom
+        ratio2 <- num2/denom
+        ratio3 <- num3/denom
+        
+        # Calculate negative log likelihood (so that a minimum corresponds with
+        # the maximum likelihood)
+        out <- -log(prod(ratio1^((data$result == "H") * timeEffect) *
+                           ratio2^((data$result == "D") * timeEffect) *
+                           ratio3^((data$result == "A") * timeEffect)))
+      }
+      
+      # Calculate the ML estimates
+      init <- rep(0,nb.teams+2)
+      # opt.nlm <- nlm(L,init,data)
+      opt.optim.ML <- optim(init,L,gr = NULL,data=data,halfPeriod=Inf,
+                            method="BFGS")
+      
+      # Compare ML estimates to actual ranking
+      teamStrength <- opt.optim.ML$par[-(nb.teams+(1:2))]
+      ranking.ML <- match(1:nb.teams,order(teamStrength,decreasing=TRUE))
+      
+      ########################################
+      # Home away team strength calculations #
+      ########################################
+      
+      # ML function
+      L <- function(parameters, data, halfPeriod = Inf){
+        # All parameters should be strictly positive - enforced by exp
+        # transformation
+        parameters <- exp(parameters)
+        
+        # Split up parameters
+        n <- length(parameters)
+        nb.teams <- (n-1)/2
+        
+        strengthsHome <- parameters[1:nb.teams]
+        strengthsAway <- parameters[nb.teams+(1:nb.teams)]
+        K <- parameters[n]
+        
+        # Calculate the relative outcome probabilities
+        num1 <- strengthsHome[data$homeId]
+        num3 <- strengthsAway[data$visitId]
+        num2 <- K*sqrt(num1*num3)
+        denom <- num1 + num2 + num3
+        
+        # Calculate the ML ratios
+        ratio1 <- num1/denom
+        ratio2 <- num2/denom
+        ratio3 <- num3/denom
+        
+        # Calculate the time effect
+        timeEffect <- exp(-data$days.passed*log(2)/halfPeriod)
+        
+        # Calculate negative log likelihood (so that a minimum corresponds with
+        # the maximum likelihood)
+        out <- -log(prod(ratio1^((data$result == "H") * timeEffect) *
+                           ratio2^((data$result == "D") * timeEffect) *
+                           ratio3^((data$result == "A") * timeEffect)))
+      }
+      
+      # Calculate the ML estimates
+      init <- rep(0,nb.teams*2+1)
+      opt.optim.ML <- optim(init,L,gr = NULL,data=data,halfPeriod=Inf,
+                            method="BFGS")
+      
+      # Compare ML estimates to actual ranking
+      ranking.MLHA <- match(1:(2*nb.teams),
+                            order(opt.optim.ML$par[-(2*nb.teams+1)],
+                                  decreasing=TRUE))
+      ranking.actual2 <- match(teams,season.table2$team)
+      ranking.actual3 <- match(teams,season.table3$team)
+      
+      # Log of team strengths
+      home <- opt.optim.ML$par[1:nb.teams]
+      away <- opt.optim.ML$par[nb.teams+(1:nb.teams)]
+      tieEffect <- opt.optim.ML$par[2*nb.teams+1]
+      
+      # Calculate ties in the 2 point ranking
+      tie2Teams <- season.table2$team[
+        season.table2$Pts == c(season.table2$Pts[2:nb.teams],-Inf) |
+          season.table2$Pts == c(Inf,season.table2$Pts[-nb.teams])]
+      tie2 <- teams %in% tie2Teams
+      
+      # Add all combined calculations to the summary data frame
+      summary <- rbind(summary,data.frame(team=teams,teamStrength=teamStrength,
+                                          MLRanking=ranking.ML,
+                                          home=home,away=away,
+                                          tieEffect=tieEffect,
+                                          ranking2=ranking.actual2,
+                                          ranking3=ranking.actual3,
+                                          tie2 = tie2,
+                                          season=targetSeason))
+    }
+    
+    # Save summary on last run of loop
+    if(i == nbSeasons){
+      
+      
+      # Add table sizes to the summary file
+      tableSizes <- aggregate(summary$ranking2,list(summary$season),max)
+      names(tableSizes) <- c("season","tableSize")
+      summary <- merge(summary,tableSizes,by="season")
+      
+      save(summary,file = summaryFile)
+    }
+  }
+}
+
+# Subset on the years of interest
+summary <- summary[summary$season %in% targetSeasons,]
+
+# Note: 1891 - Sunderland wins all home matches
+
+# Arithmetic average of team strength ratings and transform back to log of
+# team strengths
+summary$AM <- log((exp(summary$home)+exp(summary$away))/2)
+summary$GM <- (summary$home+summary$away)/2
+summary$HM <- log(2*exp(summary$home+summary$away)/
+                    (exp(summary$home)+exp(summary$away)))
+orders <- aggregate(summary[,c("AM","GM","HM")],list(summary$season),
+                    function(x){
+                      match(1:length(x),order(x,decreasing=TRUE))
+                    })
+actual.rankings <- aggregate(summary[,"ranking2"],list(summary$season),
+                             function(x) x)
+merged.rankings <- merge(actual.rankings,orders)
+names(merged.rankings)[1:2] <- c("Season","Actual")
+strengthComb <- t(apply(merged.rankings,1,function(x){
+  sapply(3:5, function(y) {sum(abs(unlist(x[2])-unlist(x[y])))})}))
+colnames(strengthComb) <- c("AM","GM","HM")
+
+# Conclusion: use GM to combine team strengths
+cat(paste0(colnames(strengthComb),":",
+           round(colSums(strengthComb)/nrow(summary),3),collapse="; "),"\n\n")
+
+# Function to calculate the expected number of points for teams given home and
+# away strengths as well as the magnitute of the tie effect
+calculatePoints <- function(season,pointSystem){
+  # Extract the number of teams
+  nbTeams <- season$tableSize[1]
+  
+  # Calculate the numerator and denominator terms of all home matches
+  homeWinBeta <- rep(exp(season$home),each=nbTeams)
+  homeDrawBeta <- rep(exp(season$tieEffect),each=nbTeams)*
+    sqrt(rep(exp(season$home),each=nbTeams)*rep(exp(season$away),nbTeams))
+  homeLossBeta <- rep(exp(season$away),nbTeams)
+  denominatorProbH <- homeWinBeta+homeDrawBeta+homeLossBeta
+  
+  # Calculate the expected points for all potential matches
+  expectedHPoints <- homeDrawBeta/denominatorProbH +
+    pointSystem*homeWinBeta/denominatorProbH
+  
+  # Exclude matches against itself
+  expectedHPoints <- expectedHPoints[-(nbTeams*(0:(nbTeams-1))+(1:nbTeams))]
+  
+  # Sum the expected home points
+  expectedHPoints <- colSums(matrix(expectedHPoints,ncol=nbTeams))
+  
+  # Calculate the numerator and denominator terms of all away matches
+  awayWinBeta <- rep(exp(season$away),each=nbTeams)
+  awayDrawBeta <- rep(exp(season$tieEffect),each=nbTeams)*
+    sqrt(rep(exp(season$away),each=nbTeams)*rep(exp(season$home),nbTeams))
+  awayLossBeta <- rep(exp(season$home),nbTeams)
+  denominatorProbA <- awayWinBeta+awayDrawBeta+awayLossBeta
+  
+  # Calculate the expected points for all potential matches
+  expectedAPoints <- awayDrawBeta/denominatorProbA +
+    pointSystem*awayWinBeta/denominatorProbA
+  
+  # Exclude matches against itself
+  expectedAPoints <- expectedAPoints[-(nbTeams*(0:(nbTeams-1))+(1:nbTeams))]
+  
+  # Sum the expected home points
+  expectedAPoints <- colSums(matrix(expectedAPoints,ncol=nbTeams))
+  
+  # Sum the expected home and away points
+  expectedPoints <- expectedHPoints + expectedAPoints
+}
+
+# Alternative solution: use the team strengths to derive result probabilities 
+# and consequently the expected number of points for each team0
+summary$rankingHA2 <- rep(NA,nrow(summary))
+
+for(i in 1:nbSeasons){
+  # Subset scores dataset
+  targetSeason <- targetSeasons[i]
+  
+  # Subset scores dataset
+  ids <- summary$season == targetSeason
+  summarySeason <- summary[ids,]
+  
+  if(nrow(summarySeason)>0){
+    points <- calculatePoints(summarySeason,2)
+    summary$rankingHA2[ids] <-
+      match(1:summarySeason$tableSize[1],order(points,decreasing=TRUE))
+  }
+}
+
+cat("Mean ranking difference BT home and away stengths combination:",
+    round(mean(abs(summary$rankingHA2-summary$ranking2)),3),"\n\n")
+
+# Misclassification function to determine the ptimal mu and sigma
+# transformations to model ranking
+MC <- function(parameters, summary, actual.rankings){
+  muH <- parameters[1]
+  muA <- parameters[2]
+  sigmaH <- exp(parameters[3])
+  sigmaA <- exp(parameters[4])
+  powerRatings <- exp(parameters[5])
+  ratings <- pnorm(summary$home*powerRatings,muH,sigmaH) +
+    pnorm(summary$away*powerRatings,muA,sigmaA)
+  rankings <- aggregate(ratings,list(summary$season),
+                        function(x){
+                          match(1:length(x),order(x,decreasing=TRUE))
+                        })
+  
+  # Calculate the number of misclassifications
+  misclassifications <- sum(
+    apply(cbind(actual.rankings,rankings),1,
+          function(x){sum(abs(unlist(x[2])-unlist(x[4])))})
+  )
+}
+
+# Calculate the optimal parameters for combined ranking normalization
+# transformation
+init <- c(rep(0,5))
+opt.optim.MC <- optim(init,MC,gr=NULL,summary=summary,
+                      actual.rankings=actual.rankings,method="BFGS")
+
+# Optimal combination of home and away strengths
+cat("Mean ranking difference optimal normal home and away stengths combination:",
+    round(opt.optim.MC$value/nrow(summary),3),"\n\n")
+
+# Create the contingency table showing the existence of ties versus difference
+# in the team strength ranking compared to the actual two point ranking
+# => Both rankings perfect in the absence of ties!!
+print(table(summary$tie2,summary$MLRanking==summary$ranking2,
+            dnn=c("Tie in 2 point ranking","Team ranking correct")))
+print(table(summary$tie2,summary$rankingHA2==summary$ranking2,
+            dnn=c("Tie in 2 point ranking","Combined home away ranking correct")))
+
+# Compare when the team ranking and the combined home and away rankings are
+# correct
+rankingComparisonTable <-
+  table(summary$MLRanking==summary$ranking2,summary$rankingHA2==summary$ranking2,
+        dnn=c("Team ranking correct","Combined home away ranking correct"))
+print(rankingComparisonTable)
+
+# Test for marginal homogeneity in the ranking comparison table using McNemar's
+# test
+cat("P-value of McNemar's test:",
+    pchisq((rankingComparisonTable[2,1]-rankingComparisonTable[1,2])^2/
+         (rankingComparisonTable[2,1]+rankingComparisonTable[1,2]),1))
+```
